@@ -1,0 +1,134 @@
+*,
+::after,
+::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  background: #209cee;
+  padding: 30px;
+}
+
+main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+button {
+  background: transparent;
+  border: none;
+}
+
+button:focus {
+  outline: thin dotted;
+}
+
+/* Todo List */
+
+.todo-list {
+  background: #e8e8e8;
+  border-radius: 4px;
+  max-width: 800px;
+  min-width: 530px;
+  width: 90vw;
+  margin: 5rem 0;
+  padding: 1.5rem;
+}
+
+/* Add / Edit */
+
+.form-control {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 1fr repeat(3, max-content);
+}
+
+.name-box,
+.react-datepicker-wrapper input {
+  height: 2rem;
+}
+
+.name-box {
+  min-width: 190px;
+  flex-grow: 1;
+}
+
+.submit-btn,
+.reset-btn {
+  border-color: transparent;
+  color: #e8e8e8;
+  padding: 0.5rem;
+  text-transform: capitalize;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-radius: 3px;
+}
+
+.submit-btn {
+  background: #209cee;
+}
+.reset-btn {
+  background: dimgray;
+}
+
+/* Todo Item */
+
+.todo {
+  align-items: center;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 38px 2fr 1fr max-content;
+  font-size: 16px;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding: 10px;
+}
+
+.complete-btn,
+.edit-btn,
+.delete-btn {
+  font-size: 24px;
+  display: inline-flex;
+  margin-left: 6px;
+}
+
+.complete-btn {
+  color: greenyellow;
+}
+
+.delete-btn {
+  color: red;
+}
+
+.edit-btn {
+  color: #209cee;
+}
+
+/* Alert */
+
+.alert {
+  margin-bottom: 1rem;
+  height: 1.25rem;
+  display: grid;
+  align-items: center;
+  text-align: center;
+  font-size: 0.7rem;
+  border-radius: 0.25rem;
+  letter-spacing: var(--spacing);
+  text-transform: capitalize;
+}
+.alert-danger {
+  color: #721c24;
+  background: #f8d7da;
+}
+.alert-success {
+  color: #155724;
+  background: #d4edda;
+}
