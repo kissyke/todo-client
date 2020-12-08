@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import items from "./data/data.js";
 import Alert from "./components/Alert.js";
 import TodoItem from "./components/TodoItem";
 import DatePicker, { setDefaultLocale } from "react-datepicker";
@@ -24,39 +23,102 @@ function App() {
     (a.date || Number.POSITIVE_INFINITY) - (b.date || Number.POSITIVE_INFINITY);
 
   useEffect(() => {
-    setTodoItems(items.sort(sortTodoItems));
+    const fetchData = async () => {
+      const result = await fetch("/api/todos");
+      const list = await result.json();
+      for (const item of list) {
+        if (item.date) {
+          item.date = new Date(item.date);
+        }
+      }
+      console.log(list);
+      list.sort(sortTodoItems);
+      setTodoItems(list);
+    };
+    try {
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
-  const addTodo = (text, date) => {
-    const id = new Date().getTime().toString();
-    const newTodos = [...todoItems, { id, text, date }];
+  const addTodo = async (text, date) => {
+    const newTodo = { text, date };
+    newTodo.date = newTodo.date ? newTodo.date.toString() : newTodo.date;
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTodo),
+    };
+    try {
+      const result = await fetch("/api/todos", requestOptions);
+      const newItem = await result.json();
+      const fixedNewItem = {
+        ...newItem,
+        date: newItem.date ? new Date(newItem.date) : newItem.date,
+      };
+      const newTodos = [...todoItems, fixedNewItem];
+      newTodos.sort(sortTodoItems);
+      setTodoItems(newTodos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateTodo = async (todo) => {
+    const fixedTodo = {
+      ...todo,
+      date: todo.date ? todo.date.toString() : todo.date,
+    };
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fixedTodo),
+    };
+    const result = await fetch(`/api/todos/${todo._id}`, requestOptions);
+    const updatedItem = await result.json();
+    const fixedUpdatedItem = {
+      ...updatedItem,
+      date: updatedItem.date ? new Date(updatedItem.date) : updatedItem.date,
+    };
+    const newTodos = todoItems.map((item) =>
+      item._id === fixedUpdatedItem._id ? { ...fixedUpdatedItem } : item
+    );
     newTodos.sort(sortTodoItems);
     setTodoItems(newTodos);
   };
 
-  const toggleCompleteTodo = (id) => {
-    const newTodos = [...todoItems];
-    const specificItem = newTodos.find((item) => item.id === id);
+  const toggleCompleteTodo = async (id) => {
+    const specificItem = todoItems.find((item) => item._id === id);
     specificItem.isCompleted = !specificItem.isCompleted;
-    setTodoItems(newTodos);
+    updateTodo(specificItem);
   };
 
-  const removeTodo = (id) => {
-    const newTodos = todoItems.filter((item) => item.id !== id);
-    showAlert(true, "danger", "item removed");
-    setTodoItems(newTodos);
+  const removeTodo = async (id) => {
+    //const specificItem = todoItems.find((item) => item._id === id);
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    try {
+      await fetch(`/api/todos/${id}`, requestOptions);
+      const newTodos = todoItems.filter((item) => item._id !== id);
+      showAlert(true, "danger", "item removed");
+      setTodoItems(newTodos);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const editItem = (id) => {
-    const specificItem = todoItems.find((item) => item.id === id);
+    const specificItem = todoItems.find((item) => item._id === id);
     setIsEditing(true);
     setEditID(id);
     setName(specificItem.text);
-    console.log(specificItem.date);
-    setSelectedDate(specificItem.date || new Date());
-    console.log(selectedDate);
-    console.log(new Date(selectedDate));
-    console.log(selectedDate);
+    console.log("before edit: " + specificItem.date);
+    setSelectedDate(
+      specificItem.date ? new Date(specificItem.date) : new Date()
+    );
   };
 
   const handleSubmit = (e) => {
@@ -64,14 +126,9 @@ function App() {
     if (!name) {
       showAlert(true, "danger", "please enter value");
     } else if (name && isEditing) {
-      setTodoItems(
-        todoItems.map((item) => {
-          if (item.id === editID) {
-            return { ...item, text: name, date: selectedDate };
-          }
-          return item;
-        })
-      );
+      const specificItem = todoItems.find((item) => item._id === editID);
+      const modifiedItem = { ...specificItem, text: name, date: selectedDate };
+      updateTodo(modifiedItem);
       setName("");
       setSelectedDate(null);
       setEditID(null);
@@ -106,7 +163,7 @@ function App() {
           todoItems.length > 0 &&
           todoItems.map((todo) => (
             <TodoItem
-              key={todo.id}
+              key={todo._id}
               todo={todo}
               toggleCompleteTodo={toggleCompleteTodo}
               removeTodo={removeTodo}
@@ -124,7 +181,7 @@ function App() {
             />
             <div>
               <DatePicker
-                selected={selectedDate}
+                selected={selectedDate ? new Date(selectedDate) : null}
                 onChange={(date) => setSelectedDate(date)}
                 dateFormat="yyyy. MMM dd. HH:mm"
                 showTimeInput
@@ -135,7 +192,7 @@ function App() {
               />
             </div>
             <button type="submit" className="submit-btn">
-              {isEditing ? "edit" : "add"}
+              {isEditing ? "update" : "add"}
             </button>
             <button type="reset" className="reset-btn">
               cancel
