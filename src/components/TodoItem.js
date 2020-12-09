@@ -24,7 +24,7 @@ function TodoItem({ todo, toggleCompleteTodo, removeTodo, editItem }) {
 
       <span className="date">
         {todo.date
-          ? formatDistanceToNow(date, { addSuffix: true })
+          ? formatDistanceToNow(todo.date, { addSuffix: true })
           : "(no date)"}
       </span>
       <div>

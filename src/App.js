@@ -156,9 +156,13 @@ function App() {
   return (
     <main className="app">
       <article className="todo-list">
-        {alert.show && (
-          <Alert {...alert} removeAlert={showAlert} list={todoItems} />
-        )}
+        <header>
+          <h2>My To-do list</h2>
+          {alert.show && (
+            <Alert {...alert} removeAlert={showAlert} list={todoItems} />
+          )}
+        </header>
+
         {todoItems &&
           todoItems.length > 0 &&
           todoItems.map((todo) => (
@@ -179,7 +183,7 @@ function App() {
               onChange={(e) => setName(e.target.value)}
               placeholder="What to do..."
             />
-            <div>
+            <div className="date-box">
               <DatePicker
                 selected={selectedDate ? new Date(selectedDate) : null}
                 onChange={(date) => setSelectedDate(date)}
