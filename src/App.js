@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./App.css";
-import Alert from "./components/Alert.js";
-import TodoItem from "./components/TodoItem";
-import DatePicker, { setDefaultLocale } from "react-datepicker";
-import hu from "date-fns/locale/hu";
-import "react-datepicker/dist/react-datepicker.css";
-setDefaultLocale("hu", hu);
+import Header from "./components/Header/Header";
+import Alert from "./components/Alert/Alert.js";
+import TodoItem from "./components/TodoItem/TodoItem";
+import EditForm from "./components/EditForm/EditForm";
 
 function App() {
   const [todoItems, setTodoItems] = useState([]);
@@ -115,7 +113,6 @@ function App() {
     setIsEditing(true);
     setEditID(id);
     setName(specificItem.text);
-    console.log("before edit: " + specificItem.date);
     setSelectedDate(
       specificItem.date ? new Date(specificItem.date) : new Date()
     );
@@ -156,13 +153,11 @@ function App() {
   return (
     <main className="app">
       <article className="todo-list">
-        <header>
-          <h2>My To-do list</h2>
+        <Header>
           {alert.show && (
             <Alert {...alert} removeAlert={showAlert} list={todoItems} />
           )}
-        </header>
-
+        </Header>
         {todoItems &&
           todoItems.length > 0 &&
           todoItems.map((todo) => (
@@ -174,35 +169,15 @@ function App() {
               editItem={editItem}
             />
           ))}
-        <form onSubmit={handleSubmit} onReset={handleReset}>
-          <div className="form-control">
-            <input
-              type="text"
-              className="name-box"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="What to do..."
-            />
-            <div className="date-box">
-              <DatePicker
-                selected={selectedDate ? new Date(selectedDate) : null}
-                onChange={(date) => setSelectedDate(date)}
-                dateFormat="yyyy. MMM dd. HH:mm"
-                showTimeInput
-                timeFormat="HH:mm"
-                locale={hu}
-                placeholderText="When..."
-                isClearable
-              />
-            </div>
-            <button type="submit" className="submit-btn">
-              {isEditing ? "update" : "add"}
-            </button>
-            <button type="reset" className="reset-btn">
-              cancel
-            </button>
-          </div>
-        </form>
+        <EditForm
+          name={name}
+          selectedDate={selectedDate}
+          handleSubmit={handleSubmit}
+          handleReset={handleReset}
+          setName={setName}
+          setSelectedDate={setSelectedDate}
+          isEditing={isEditing}
+        />
       </article>
     </main>
   );

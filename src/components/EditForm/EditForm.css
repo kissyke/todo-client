@@ -1,0 +1,58 @@
+/* Add / Update form */
+
+.form-control {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 1fr repeat(3, max-content);
+  grid-template-areas: "namebox date submit cancel";
+}
+.name-box,
+.react-datepicker-wrapper input {
+  height: 2rem;
+  width: inherit;
+  padding: 3px;
+}
+.name-box {
+  min-width: 190px;
+  flex-grow: 1;
+  grid-area: namebox;
+}
+.date-box {
+  grid-area: date;
+  width: 100%;
+  min-width: 160px;
+}
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.submit-btn,
+.reset-btn {
+  border-color: transparent;
+  color: #e8e8e8;
+  padding: 0.5rem;
+  text-transform: capitalize;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-radius: 3px;
+}
+.submit-btn {
+  background: #209cee;
+  grid-area: submit;
+}
+.reset-btn {
+  background: dimgray;
+  grid-area: cancel;
+}
+
+/* Responsive */
+
+@media (max-width: 530px) {
+  .form-control {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+      "namebox namebox"
+      "date date"
+      "submit cancel";
+  }
+}
