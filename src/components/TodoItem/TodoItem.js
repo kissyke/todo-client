@@ -7,8 +7,10 @@ import {
   FaRegTrashAlt,
 } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
+import { useGlobalContext } from "../../context/TodoContext";
 
-function TodoItem({ todo, toggleCompleteTodo, removeTodo, editItem }) {
+function TodoItem({ todo }) {
+  const { toggleCompleteTodo, removeTodo, editItem } = useGlobalContext();
   return (
     <section
       className="todo"

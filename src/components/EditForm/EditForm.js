@@ -1,19 +1,22 @@
 import React from "react";
 import "./EditForm.css";
+import { useGlobalContext } from "../../context/TodoContext";
 import DatePicker, { setDefaultLocale } from "react-datepicker";
 import hu from "date-fns/locale/hu";
 import "react-datepicker/dist/react-datepicker.css";
 setDefaultLocale("hu", hu);
 
-function EditForm({
-  handleSubmit,
-  handleReset,
-  name,
-  selectedDate,
-  setName,
-  setSelectedDate,
-  isEditing,
-}) {
+function EditForm() {
+  const {
+    handleSubmit,
+    handleReset,
+    name,
+    selectedDate,
+    setName,
+    setSelectedDate,
+    isEditing,
+  } = useGlobalContext();
+
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
       <div className="form-control">

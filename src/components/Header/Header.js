@@ -1,11 +1,16 @@
 import React from "react";
 import "./Header.css";
+import Alert from "../Alert/Alert";
+import { useGlobalContext } from "../../context/TodoContext";
 
-function Header(props) {
+function Header() {
+  const { alert, showAlert, todoItems } = useGlobalContext();
   return (
     <header>
       <h2>My To-do list</h2>
-      {props.children}
+      {alert.show && (
+        <Alert {...alert} removeAlert={showAlert} list={todoItems} />
+      )}
     </header>
   );
 }

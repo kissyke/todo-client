@@ -25,6 +25,14 @@
 .react-datepicker-wrapper {
   width: 100%;
 }
+.date-box
+  .react-datepicker__input-time-container
+  .react-datepicker-time__input-container
+  .react-datepicker-time__input
+  input {
+  width: 100%;
+}
+
 .submit-btn,
 .reset-btn {
   border-color: transparent;
